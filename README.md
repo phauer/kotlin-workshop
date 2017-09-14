@@ -122,6 +122,8 @@ table.addComponentColumn{ person ->
 # Some Useful Links
 
 - [Kotlin Idioms](https://kotlinlang.org/docs/reference/idioms.html)
+- [Idiomatic Kotlin](https://blog.philipphauer.de/idiomatic-kotlin-best-practices/)
+- [Clean Code with Kotlin](https://blog.philipphauer.de/clean-code-kotlin/)
 - [Kotlin Cheat Sheet](https://jaxenter.com/kotlin-cheat-sheet-tips-tricks-136716.html)
 - [Kotlin Koans](https://kotlinlang.org/docs/tutorials/koans.html)
 
