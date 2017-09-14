@@ -12,7 +12,7 @@
 
 ## Clone Project
 
-Please clone the correct branch. **Don't look at the files in `src/main/kotlin` in the master branch, because that is the solution of the workshop**. :-) 
+Please clone the correct branch (`starting-point`). **Don't look at the files in `src/main/kotlin` in the master branch, because that is the solution of the workshop**. :-) 
 
 ```bash
 git clone -b starting-point https://git.spreadomat.net/pha/kotlin-workshop
