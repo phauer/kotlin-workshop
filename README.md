@@ -62,7 +62,7 @@ If you use docker-machine, you can't access the MySQL via `localhost`. You have 
 
 The Vaadin UI is already ready. You only have to implement the logic and database access behind the UI controls.
 
-[Vaadin GUI](vaadin-gui.png)
+![Vaadin GUI](vaadin-gui.png)
 
 - Find and display all users: click button in vaadin gui, retrieve all users from mysql, display the result in the gui. therefore, please fulfil the mapping rules specified in `local-db-init/users.sql`.
 - Search for a certain user id: enter an ID in the textfield `idSearchField` and display the result in the table. mind to handle the "not found" case.
