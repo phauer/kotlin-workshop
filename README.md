@@ -78,16 +78,23 @@ You should only have to touch the following files:
 
 # Relevant API Knowledge
 
+```kotlin
+//create enums
+enum class Platform { EU, NA }
+```
+
 ## Spring JDBCTemplate
 
 For the `UserDAO`:
 
 ```kotlin
 //query for multiple entries and map them using the rowMapper
-template.query("SELECT * FROM users;", rowMapper)
+template.query("SELECT * FROM users;", this::mapToUser)
+// mapToUser has to be a function with the signature: 
+// mapToUser(rs: ResultSet, rowNum: Int): User
 
 //query for a single object and supply an argument
-template.queryForObject("SELECT * FROM users WHERE id = ?;", arrayOf(id), rowMapper)
+template.queryForObject("SELECT * FROM users WHERE id = ?;", arrayOf(id), this::mapToUser)
 //mind that an EmptyResultDataAccessException is thrown, when no object was found
 
 //in your implementation of your RowMapper (the method mapRow(ResultSet, rowNum)), you can use
