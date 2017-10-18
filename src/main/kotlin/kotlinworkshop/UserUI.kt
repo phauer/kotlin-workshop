@@ -85,7 +85,7 @@ class UserUI(val dao: UserDAO): UI() {
         val amount = amountString.toIntOrNull() ?: 0
         if (amount != 0) {
             val dummyUsers = (1..amount).map { createDummyUser() }
-            dao.addUsers(dummyUsers)
+            dummyUsers.forEach { dao.addUser(it) }
         }
     }
 

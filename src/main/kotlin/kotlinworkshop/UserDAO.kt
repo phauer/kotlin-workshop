@@ -16,7 +16,7 @@ class UserDAO(private val template: JdbcTemplate) {
             , description = rs.getString("description")
             , name = mergeNames(rs)
             , role = if (rs.getBoolean("guest")) Role.GUEST else Role.USER
-            , platform = mapToPlatform(rs.getString("platform"))
+            , platform = rs.getString("platform").mapToPlatform()
             , dateCreated = rs.getTimestamp("date_created").toInstant()
             , state = State.valueOf(rs.getString("state"))
     )
@@ -29,26 +29,24 @@ class UserDAO(private val template: JdbcTemplate) {
 
     fun deleteUser(id: Int) = template.update("DELETE FROM users WHERE id = ?;", id)
 
-    fun addUsers(newUsers: List<User>) {
-        val args = newUsers.map { user -> toArgumentsArray(user) }
-        template.batchUpdate("INSERT INTO users (id, email, firstname, lastname, description, guest, platform, date_created, state) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), ?);", args)
+    fun addUser(user: User) {
+        template.update(
+                "INSERT INTO users (id, email, firstname, lastname, description, guest, platform, date_created, state) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), ?);",
+                user.id, user.email, user.name, null,
+                user.description,
+                user.role == Role.GUEST,
+                user.platform.toString(),
+                user.dateCreated.epochSecond,
+                user.state.toString()
+        )
     }
 }
 
-private fun toArgumentsArray(user: User) = arrayOf(
-        user.id, user.email, user.name, null,
-        user.description,
-        user.role == Role.GUEST,
-        user.platform.toString(),
-        user.dateCreated.epochSecond,
-        user.state.toString()
-)
-
-private fun mapToPlatform(platform: String?) = when(platform) {
+private fun String?.mapToPlatform() = when(this) {
     "eu", "EU", "europe" -> Platform.EU
     "na", "NA", "northamerica" -> Platform.NA
     null -> null
-    else -> throw UserDAOException("Unknown platform $platform")
+    else -> throw UserDAOException("Unknown platform $this")
 }
 
 private fun mergeNames(rs: ResultSet): String? {

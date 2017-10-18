@@ -4,9 +4,9 @@
 
 - Docker and Docker-Compose (for the MySQL container). Or you can manage your local MySQL database manually.
 - Java 8 JDK
-- IntelliJ IDEA (highly recommended) or Eclipse (for the brave)
-    - IntelliJ IDEA 2017.2.2 
-    - Kotlin Plugin 1.1.4-release-IJ2017.2-3
+- IntelliJ IDEA (highly recommended). You won't have much fun with Eclipse.
+    - IntelliJ IDEA 2017.2.2 or newer. The Community Edition is fine.
+    - Latest Kotlin Plugin 
 
 # Preparation
 
@@ -15,16 +15,12 @@
 Please clone the correct branch (`starting-point`). **Don't look at the files in `src/main/kotlin` in the master branch, because that is the solution of the workshop**. :-) 
 
 ```bash
-git clone -b starting-point https://github.com/phauer/kotlin-workshop
+git clone -b starting-point https://github.com/phauer/kotlin-workshop.git
 ```
 
 ## Open the Project in IDEA
 
 Use `File → Open ...` and choose the folder `kotlin-workshop`.
-
-Gradle should be automatically detected. Just check `Use auto-import` in the following window. `OK`.
-
-![IDEA Open Dialog](./idea-open-dialog.png)
 
 ## Start the MySQL Container
 
@@ -68,7 +64,7 @@ The Vaadin UI is already ready. You only have to implement the logic and databas
 - Search for a certain user id: enter an ID in the textfield `idSearchField` and display the result in the table. mind to handle the "not found" case.
 - Add a button "email of active users". when clicked, it should show a notification that shows all emails of all active users. please filter and map the data in the application layer using Kotlin's collection API.
 - Delete user: add a button in the table to delete a user.
-- Add a button to generate _n_ dummy users. the number of dummy users can be specified with a new text field. handle invalid inputs (empty textfield, not a number). try to add all users with a single SQL statement using `template.batchUpdate()`.
+- Add a button to generate _n_ dummy users. the number of dummy users can be specified with a new text field. handle invalid inputs (empty textfield, not a number). for the sake of simplicity, insert each new user with a dedicated `INSERT` statement (no batch update required).
 
 You should only have to touch the following files:
 
@@ -92,6 +88,7 @@ For the `UserDAO`:
 template.query("SELECT * FROM users;", this::mapToUser)
 // mapToUser has to be a function with the signature: 
 // mapToUser(rs: ResultSet, rowNum: Int): User
+// within the method, you can access the cell values with methods like: rs.getString("columnName")
 
 //query for a single object and supply an argument
 template.queryForObject("SELECT * FROM users WHERE id = ?;", arrayOf(id), this::mapToUser)
@@ -101,8 +98,11 @@ template.queryForObject("SELECT * FROM users WHERE id = ?;", arrayOf(id), this::
 resultSet.getString("email")
 //to retrieve the values of a certain column
 
-//batch insert
-template.batchUpdate("INSERT INTO users (id, email, firstname, lastname, description, guest, platform, date_created, state) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), ?);", List<Array<Any>>)
+//insert
+template.update(
+        "INSERT INTO users (id, email, firstname, lastname, description, guest, platform, date_created, state) VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), ?);",
+        id, email, firstname, lastname, description, guest, platform, date_created, state
+)
 ```
 
 ## Vaadin
@@ -112,6 +112,7 @@ For the `UserUI`:
 ```kotlin
 //set items to a grid (= a table)
 table.setItems(users)
+// mind to change the grid object creation to: Grid<User>(User::class.java) instead of Grid<Any>
 
 //show a notification:
 Notification.show("Hi!")
