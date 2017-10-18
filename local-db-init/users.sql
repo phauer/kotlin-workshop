@@ -11,6 +11,7 @@ CREATE TABLE `users` (
   `lastname` varchar(255),
   `description` mediumtext,
   -- guest: map to enum Role (USER; GUEST)
+  -- the column type tinyint(1) can be easily interpreted as an boolean: rs.getBoolean("guest")
   `guest` tinyint(1) NOT NULL DEFAULT '0',
   -- platform: contains a mess! eu, na, EU, NA, europe, northamerica, null => map to enum Platform(EU,NA)!
   `platform` varchar(100),
