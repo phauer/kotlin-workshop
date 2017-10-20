@@ -124,6 +124,7 @@ table.addComponentColumn{ person ->
     button.addClickListener {
         println(person)
     }
+    button
 }
 ```
 
